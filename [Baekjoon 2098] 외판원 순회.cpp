@@ -18,6 +18,7 @@ using namespace std;
 int N;
 int W[17][17];
 int cost[17][1 << 16];
+bool visited[17][1 << 16];
 
 void input() {
 	cin >> N;
@@ -34,12 +35,13 @@ int dfs(int cur_node, int cur_bit) {
 		return W[cur_node][1];
 	}
 
-	if (cost[cur_node][cur_bit] != INF)
+	if (visited[cur_node][cur_bit])
 		return cost[cur_node][cur_bit];
+	visited[cur_node][cur_bit] = true;
 
 	for (int next_node = 1; next_node <= N; next_node++) {
 		if (!W[cur_node][next_node]) continue;
-		if((cur_bit & (1 << (next_node - 1))) == (1 << (next_node - 1))) continue;
+		if ((cur_bit & (1 << (next_node - 1))) == (1 << (next_node - 1))) continue;
 		cost[cur_node][cur_bit] = min(cost[cur_node][cur_bit],
 			W[cur_node][next_node] + dfs(next_node, cur_bit | (1 << (next_node - 1))));
 	}
